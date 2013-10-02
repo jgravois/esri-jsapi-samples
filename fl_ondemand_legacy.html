@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=7, IE=9, IE=10"> 
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>FeatureLayer On Demand</title> 
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css"> 
+    <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
+    <style>
+      html, body, #mapDiv {
+        padding:0;
+        margin:0;
+        height:100%;
+      }
+    </style>
+	<!-- instead of calling parser.parse, we can set the parseOnLoad property for the dojo loader to 'true'-->	
+	<script> dojoConfig= {parseOnLoad: true};</script>
+	<!-- see http://dojotoolkit.org/documentation/tutorials/1.9/dojo_config/ for more info -->
+	
+    <script src="http://js.arcgis.com/3.6/"></script> 
+    <script> 
+      var map;
+
+      dojo.require("esri.map");
+      dojo.require("esri.InfoTemplate");
+      dojo.require("esri.layers.FeatureLayer");
+
+	  dojo.ready(init);
+	  
+      function init() {
+        //in legacy apps we need to call to 'esri.Map' instead of just 'Map'
+		map = new esri.Map("mapDiv", {
+      			basemap : "national-geographic",
+      			center : [-96.541, 38.34],
+      			zoom : 6
+      		});
+
+		/*'evented' classes are new too, but 'on' is not in and of itself AMD.
+		see https://developers.arcgis.com/en/javascript/jshelp/inside_events.html for more info*/
+      	map.on("load", initOperationalLayer);
+		
+      }
+
+      function initOperationalLayer() {
+      	var infoTemplate = new esri.InfoTemplate("${state_name}", "Population (2000):  ${pop2000:NumberFormat}");
+      	var featureLayer = new esri.layers.FeatureLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2", {
+      			//the reference to the FeatureLayer constant MODE_ONDEMAND needs to be fully qualified too.
+				mode : esri.layers.FeatureLayer.MODE_ONDEMAND,
+      			outFields : ["*"],
+      			infoTemplate : infoTemplate
+      		});
+
+      	map.addLayer(featureLayer);
+      	map.infoWindow.resize(155, 75);
+      }      
+    </script> 
+  </head> 
+  <body class="claro"> 
+    <div id="mapDiv">
+    </div>
+  </body> 
+</html>
