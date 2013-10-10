@@ -48,9 +48,8 @@
       function initOperationalLayer() {
       	var infoTemplate = new esri.InfoTemplate("${state_name}", "Population (2000):  ${pop2000:NumberFormat}");
       	var featureLayer = new esri.layers.FeatureLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2", {
-      			/*the reference to the FeatureLayer constant 
-				MODE_ONDEMAND needs to be fully qualified too.*/
-				mode : esri.layers.FeatureLayer.MODE_ONDEMAND,
+      			/*the reference to the FeatureLayer constant 'MODE_ONDEMAND' needs to be fully qualified too.*/
+      			mode : esri.layers.FeatureLayer.MODE_ONDEMAND,
       			outFields : ["*"],
       			infoTemplate : infoTemplate
       		});
